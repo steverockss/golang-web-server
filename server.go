@@ -13,6 +13,12 @@ func NewServer(port string) *Server {
 		router: NewRouter(),
 	}
 }
+func (s *Server) AddMiddleware(f http.HandlerFunc, middlewares ...MiddleWare) http.HandlerFunc {
+	for _, m := range middlewares {
+		f = m(f)
+	}
+	return f
+}
 
 func (s *Server) Listen() error {
 	http.Handle("/", s.router)
